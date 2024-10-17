@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-h^g=to4sstrka7=w(dab#!jmu_71(pzm*5%lk-o10_i#cxk2))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [".vercel.app"]
 
 # Application definition
 
@@ -78,16 +78,6 @@ WSGI_APPLICATION = 'shop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres.nhugjmxkpzizxcfwulrb',
-#         'PASSWORD': '107teamproject!',
-#         'HOST': 'aws-0-eu-central-1.pooler.supabase.com',  # Замість цього введіть свій хост
-#         'PORT': '5432',
-#     }
-# }
 from dotenv import load_dotenv
 
 load_dotenv()
