@@ -151,5 +151,5 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "https://mariiasuper.github.io/shop_team_107/",
+    "https://mariiasuper.github.io",
 ]
