@@ -1,7 +1,17 @@
+import os
 import uuid
 from django.db import models
 from django.utils.text import slugify
-from django.utils.translation import gettext_lazy as _
+
+
+# Function to generate a dynamic image upload path
+def get_image_path(instance, filename):
+    """Generate a unique image upload path."""
+    # Generates a unique filename using uuid
+    ext = filename.split('.')[-1]
+    # Use the instance's class name to dynamically set the folder and a unique name
+    filename = f"{uuid.uuid4()}.{ext}"
+    return os.path.join(f"{instance.__class__.__name__.lower()}/images/", filename)
 
 
 class Generator(models.Model):
@@ -15,13 +25,16 @@ class Generator(models.Model):
     frequency = models.IntegerField()
     engine_power_hp = models.DecimalField(max_digits=4, decimal_places=2)
     warranty_months = models.IntegerField()
+    image = models.ImageField(upload_to=get_image_path, null=True, blank=True)  # Updated to use dynamic path
     additional_information = models.TextField(blank=True, null=True)
+    slug = models.SlugField(unique=True, editable=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
-    slug = models.SlugField(unique=True, editable=False)
+    def __str__(self):
+        return self.title
 
 
 class Battery(models.Model):
@@ -36,6 +49,7 @@ class Battery(models.Model):
     number_of_cycles = models.IntegerField(blank=True, null=True)
     operating_temperature = models.CharField(max_length=255, blank=True, null=True)
     warranty_months = models.IntegerField(blank=True, null=True)
+    image = models.ImageField(upload_to=get_image_path, null=True, blank=True)  # Updated to use dynamic path
     additional_information = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -54,6 +68,7 @@ class Inverter(models.Model):
     weight_kg = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     output_voltage = models.CharField(max_length=255, blank=True, null=True)
     warranty_months = models.IntegerField()
+    image = models.ImageField(upload_to=get_image_path, null=True, blank=True)  # Updated to use dynamic path
     additional_information = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -62,15 +77,16 @@ class Inverter(models.Model):
 
 class PortablePowerStation(models.Model):
     title = models.CharField(max_length=255)
-    manufacturer = models.CharField(max_length=255)  # e.g., LiFe, Konner&Sohnen
-    nominal_power_w = models.DecimalField(max_digits=6, decimal_places=1)  # Nominal power in Watts, e.g., 1000 W, 100 W
-    peak_power_w = models.DecimalField(max_digits=6, decimal_places=1, blank=True, null=True)  # Peak power in Watts
-    battery_type = models.CharField(max_length=255)  # e.g., Lithium-ion
-    height_mm = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True)  # Height in mm
-    width_mm = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True)  # Width in mm
-    depth_mm = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True)  # Depth in mm
-    weight_kg = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)  # Weight in kg
-    warranty_months = models.IntegerField()  # Warranty period in months
+    manufacturer = models.CharField(max_length=255)
+    nominal_power_w = models.DecimalField(max_digits=6, decimal_places=1)
+    peak_power_w = models.DecimalField(max_digits=6, decimal_places=1, blank=True, null=True)
+    battery_type = models.CharField(max_length=255)
+    height_mm = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True)
+    width_mm = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True)
+    depth_mm = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True)
+    weight_kg = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    warranty_months = models.IntegerField()
+    image = models.ImageField(upload_to=get_image_path, null=True, blank=True)  # Updated to use dynamic path
     additional_information = models.TextField(blank=True, null=True)
 
     def __str__(self):
